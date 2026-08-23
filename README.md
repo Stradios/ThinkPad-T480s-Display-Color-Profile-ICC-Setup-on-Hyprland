@@ -24,7 +24,19 @@ Fixes washed-out / incorrect display colors on the ThinkPad T480s's InfoVision `
 
 ### 1. Get the ICC profile
 
-Lenovo ships a bundle of ICM profiles for various T480/T480s/X1 Carbon 6th Gen panel variants in their **ThinkPad Monitor INF File** package.
+The extracted profile bundle is included in this repo — no need to re-extract it yourself:
+
+**[⬇️ Download `ThinkPad_ICM_profiles.zip`](https://github.com/Stradios/ThinkPad-T480s-Display-Color-Profile-ICC-Setup-on-Hyprland/blob/main/ThinkPad_ICM_profiles.zip)**
+
+```bash
+wget https://github.com/Stradios/ThinkPad-T480s-Display-Color-Profile-ICC-Setup-on-Hyprland/raw/main/ThinkPad_ICM_profiles.zip
+unzip ThinkPad_ICM_profiles.zip
+```
+
+<details>
+<summary>Where this came from (if you want to re-extract it yourself instead)</summary>
+
+Lenovo ships this bundle of ICM profiles for various T480/T480s/X1 Carbon 6th Gen panel variants in their **ThinkPad Monitor INF File** package.
 
 1. Download it from [Lenovo Support](https://support.lenovo.com) — search "ThinkPad Monitor INF File" for your model.
 2. It's an Inno Setup installer (`.exe`). Extract it on Linux with [`innoextract`](https://constexpr.org/innoextract/):
@@ -34,6 +46,8 @@ Lenovo ships a bundle of ICM profiles for various T480/T480s/X1 Carbon 6th Gen p
    ```
 3. You'll get a folder of `.ICM`/`.icm` files plus `TPLCD.inf` (the hardware-ID → profile mapping table).
 
+</details>
+
 > ⚠️ **Note:** Lenovo's `TPLCD.inf` only maps `LEN4xxx`-style hardware IDs. IVO-branded panels (`IVO057D`) are **not** listed. Windows wouldn't auto-match this panel either — the generic `TPLCD.ICM` fallback is what's used here.
 
 ### 2. Store the profile somewhere permanent
@@ -42,14 +56,13 @@ Don't reference files from `~/Downloads` — put them in a stable location:
 
 ```bash
 mkdir -p ~/.local/share/icc
-cp TPLCD.ICM ~/.local/share/icc/TPLCD.ICM
+cp ThinkPad_ICM_profiles/TPLCD.ICM ~/.local/share/icc/TPLCD.ICM
 ```
 
 Optionally keep the full extracted bundle too, in case you want to try alternate variants later:
 
 ```bash
-mkdir -p ~/.local/share/icc/thinkpad-t480s-bundle
-cp *.ICM *.icm ~/.local/share/icc/thinkpad-t480s-bundle/
+cp -r ThinkPad_ICM_profiles ~/.local/share/icc/thinkpad-t480s-bundle
 ```
 
 ### 3. Configure Hyprland
